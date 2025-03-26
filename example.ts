@@ -164,6 +164,11 @@ async function main() {
   const loginInfo = authService.getInfo(loginToken);
 
   console.log({ loginToken, loginInfo });
+
+  const helloWorldJwt = authService.jwt.createBasic("test", { hello: "world" });
+  const helloWorldPayload = authService.jwt.verfiyBasic(helloWorldJwt, "test");
+
+  console.log({ helloWorldJwt, helloWorldPayload });
 }
 
 main().then();

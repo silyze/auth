@@ -39,7 +39,7 @@ export class AuthService<
   #jwtService: JwtService<TAuthInfo>;
   #emaiLService: EmailService<MetadataOf<TAuthUser>>;
   #twoFactorService: TwoFactorService<TAuthUser>;
-  #oauth: OAuthService;
+  #oauthService: OAuthService;
   #interface: AuthInterface<TAuthUser, TAuthInfo, TRegisterSchema>;
 
   constructor(
@@ -51,7 +51,7 @@ export class AuthService<
     this.#twoFactorService = new TwoFactorService(
       getTwoFactorConfiguration(config.twofactor)
     );
-    this.#oauth = new OAuthService(config.oauth);
+    this.#oauthService = new OAuthService(config.oauth);
   }
 
   async register(registrationDetails: unknown) {
@@ -197,7 +197,7 @@ export class AuthService<
   }
 
   async createExternalRedirectUrl(provider: string) {
-    return await this.#oauth.createRedirectUrl(provider);
+    return await this.#oauthService.createRedirectUrl(provider);
   }
 
   async handleExternalRedirect(
@@ -206,7 +206,11 @@ export class AuthService<
     url: URL,
     state: RedirectState
   ): Promise<ExternalRedirectResponse> {
-    const userInfo = await this.#oauth.handleRedirect(provider, url, state);
+    const userInfo = await this.#oauthService.handleRedirect(
+      provider,
+      url,
+      state
+    );
 
     if (auth) {
       await this.#interface.external.create(auth.id, provider, userInfo.sub);
@@ -277,16 +281,32 @@ export class AuthService<
     );
   }
 
-  get externalProviders(): string[] {
-    return this.#oauth.providers;
-  }
-
   getInfo(jwt: string) {
     return this.#jwtService.verify(jwt, "auth")?.info;
   }
 
   hash(password: string) {
     return this.#interface.hash(password);
+  }
+
+  get externalProviders(): string[] {
+    return this.#oauthService.providers;
+  }
+
+  get jwt() {
+    return this.#jwtService;
+  }
+
+  get email() {
+    return this.#emaiLService;
+  }
+
+  get twoFactor() {
+    return this.#twoFactorService;
+  }
+
+  get oauth() {
+    return this.#oauthService;
   }
 }
 
