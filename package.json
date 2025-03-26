@@ -1,0 +1,36 @@
+{
+  "name": "@silyze/auth",
+  "version": "1.0.0",
+  "description": "Authentication library",
+  "main": "dist/lib/index.js",
+  "types": "dist/lib/index.d.ts",
+  "keywords": [],
+  "author": "Mihail Mojsoski",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.13.13",
+    "typescript": "^5.7.3"
+  },
+  "scripts": {
+    "watch": "npx tsc --watch",
+    "build": "npx tsc",
+    "prepare": "npm run build",
+    "version": "git add -A lib",
+    "postversion": "git push && git push --tags",
+    "start": "node dist/example.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@mojsoski/assert": "^1.0.0",
+    "@types/nodemailer": "^6.4.17",
+    "hi-base32": "^0.5.1",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.10.0",
+    "openid-client": "^6.3.4",
+    "otpauth": "^9.3.6"
+  }
+}
